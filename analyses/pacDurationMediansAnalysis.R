@@ -35,7 +35,8 @@ isPAC = 0 # if this is 1, it's PAC; if 0 it's fixation
 
 # Move to this directory, and use it as a reference point to find the data folder
 this.dir <- dirname(parent.frame(2)$ofile)
-setwd(this.dir)
+setwd(this.dir) # RCAB: This part of the script is already reviewed and verified, but when run on my computer at home (using a fork) I find that I get an error message
+#### The error I get here reads:Error in dirname(parent.frame(2)$ofile) : a character vector argument expected
 
 setwd('../data/') # Move up and into data folder
 
@@ -204,6 +205,7 @@ histSaveName = '../figures/PACRawHist.pdf'
 histTitle = 'Number of PACs by League'
 } else { # fixations without actions
   analyzeDat = ultraTabViable[ultraTabViable$PACidx == 0, ]   
+  #### RCAB: Why are you overwriting the data table of Pac-fixations with non-pac fixations? The analysis that follows, is it comparing non-pac fixations or pac-fixations? If the first, then this makes no difference. If pac fixations are being compared, then this script needs to use two seperate variable names (should do this anyway as a good practice)
   histSaveName = '../figures/FixRawHist.pdf'
   histTitle = 'Number of Fixations without Actions by League'
 }
@@ -215,6 +217,8 @@ lmeBaseMod=lmer(FixDuration~(1|gameid),data=analyzeDat)
 lmeLeagueMod=lmer(FixDuration~leagueidx+(1|gameid),data=analyzeDat)
 confidenceIntervals = confint(lmeLeagueMod, "beta_", level = 0.95)
 modelDifference = anova(lmeBaseMod, lmeLeagueMod)
+
+
 
 
 ## Number of observations histograms
